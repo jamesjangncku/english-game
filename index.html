@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>英文闖關樂園</title><style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:#192b45;background:#f1f5fb}
+*{box-sizing:border-box}body{margin:0;padding:20px}main{max-width:740px;margin:20px auto;background:white;border-radius:22px;padding:clamp(18px,5vw,36px);box-shadow:0 10px 40px #21395a18}
+h1{margin:0 0 8px;font-size:clamp(26px,5vw,36px)}p{line-height:1.6}.muted{color:#64748b}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0}select,button,input{font:inherit}select,button{padding:12px 15px;border-radius:12px;border:1px solid #cbd5e1;background:white}
+button{cursor:pointer;touch-action:manipulation}button:focus-visible,select:focus-visible{outline:3px solid #60a5fa}
+.primary{background:#2563eb;color:white;border-color:#2563eb}.primary:disabled{opacity:.45}
+.stats{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:600}
+.track{height:10px;border-radius:20px;background:#e2e8f0;overflow:hidden;margin:15px 0 26px}.fill{height:100%;background:#3b82f6;transition:width .2s}
+.question{font-size:clamp(22px,4vw,29px);font-weight:700;margin:20px 0}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.option{text-align:left;min-height:70px;overflow-wrap:anywhere}.correct{border:2px solid #16a34a;background:#dcfce7}.wrong{border:2px solid #dc2626;background:#fee2e2}
+#feedback{margin:20px 0;padding:16px;border-radius:12px;background:#f1f5f9}
+.hidden{display:none!important}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:450px){.options{grid-template-columns:1fr}body{padding:8px}main{margin:5px auto}}
+</style></head><body><main>
+<h1>🎮 英文闖關樂園</h1><p class="muted">課本與考卷互動練習 · 第一版</p>
+<div class="toolbar"><label>章節 <select id="unit"></select></label><label>題型 <select id="kind"><option value="all">全部</option><option value="grammar">文法</option><option value="vocabulary">單字</option><option value="reading">閱讀</option></select></label></div>
+<div class="actions"><button class="primary" id="start">開始／重新挑戰</button><button id="wrongOnly">練習錯題</button><button id="clear">清除錯題紀錄</button></div>
+<section id="game" class="hidden" aria-live="polite"><p class="stats"><span id="progress"></span><span id="score"></span></p><div class="track"><div class="fill" id="bar"></div></div><div class="question" id="question"></div><div class="actions"><button id="speak">🔊 朗讀題目</button></div><div class="options" id="options"></div><div id="feedback" class="hidden"></div><button class="primary hidden" id="next">下一題 →</button></section>
+<section id="result" class="hidden" aria-live="polite"></section>
+<p class="muted" id="note">示範題庫可在 questions.json 修改。錯題紀錄只保存在這台裝置的瀏覽器中。</p>
+</main>
+<script src="questions.js"></script><script>
+"use strict";
+const all=window.QUESTION_BANK||[], $=id=>document.getElementById(id);
+let pool=[],i=0,score=0,answered=false;
+const KEY="english_game_wrong_v1";
+const wrong=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch{return []}};
+const qid=q=>JSON.stringify([q.unit,q.type,q.question]);
+function saveWrong(id,isWrong){let ids=new Set(wrong());isWrong?ids.add(id):ids.delete(id);try{localStorage.setItem(KEY,JSON.stringify([...ids]))}catch{}}
+function init(){const units=[...new Set(all.map(q=>q.unit))];$("unit").replaceChildren(new Option("全部章節","all"),...units.map(u=>new Option(u,u)));$("start").onclick=()=>start(false);$("wrongOnly").onclick=()=>start(true);$("clear").onclick=()=>{if(confirm("確定清除這台裝置的錯題紀錄？")){localStorage.removeItem(KEY);alert("已清除")}};$("next").onclick=next;$("speak").onclick=()=>{if(!("speechSynthesis" in window)){alert("此瀏覽器不支援語音朗讀");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(pool[i].question.replace(/___/g,"blank"));u.lang="en-US";u.rate=.85;speechSynthesis.speak(u)}}
+function start(onlyWrong){const u=$("unit").value,t=$("kind").value,ids=new Set(wrong());pool=all.filter(q=>(u==="all"||q.unit===u)&&(t==="all"||q.type===t)&&(!onlyWrong||ids.has(qid(q))));pool=[...pool].sort(()=>Math.random()-.5);i=0;score=0;$("result").classList.add("hidden");if(!pool.length){$("game").classList.add("hidden");$("result").classList.remove("hidden");$("result").textContent=onlyWrong?"目前沒有符合篩選條件的錯題。":"沒有符合條件的題目。";return}$("game").classList.remove("hidden");render()}
+function render(){answered=false;const q=pool[i];$("progress").textContent=`第 ${i+1} / ${pool.length} 題 · ${q.unit}`;$("score").textContent=`答對 ${score} 題`;$("bar").style.width=`${i/pool.length*100}%`;$("question").textContent=q.question;$("feedback").classList.add("hidden");$("next").classList.add("hidden");$("next").textContent=i===pool.length-1?"查看成績":"下一題 →";$("options").replaceChildren();q.options.forEach((o,n)=>{const b=document.createElement("button");b.className="option";b.textContent=`${String.fromCharCode(65+n)}. ${o}`;b.onclick=()=>choose(n);$("options").append(b)})}
+function choose(n){if(answered)return;answered=true;const q=pool[i],ok=n===q.answer;if(ok)score++;saveWrong(qid(q),!ok);[...$("options").children].forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add("correct");else if(j===n)b.classList.add("wrong")});$("feedback").textContent=`${ok?"✅ 答對了！":"❌ 答錯了。"} 正確答案：${q.options[q.answer]}。${q.explanation}`;$("feedback").classList.remove("hidden");$("next").classList.remove("hidden");$("score").textContent=`答對 ${score} 題`}
+function next(){i++;if(i<pool.length){render();return}$("game").classList.add("hidden");$("result").classList.remove("hidden");$("result").replaceChildren();const h=document.createElement("h2");h.textContent=`🏆 完成！答對 ${score} / ${pool.length} 題（${Math.round(score/pool.length*100)}%）`;const p=document.createElement("p");p.textContent="可以按「練習錯題」重新挑戰未答對的題目。";$("result").append(h,p)}
+init();
+</script></body></html>

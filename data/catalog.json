@@ -1,0 +1,312 @@
+[
+  {
+    "id": "science",
+    "emoji": "🔬",
+    "name": "ScienceFusion 5",
+    "subtitle": "Volume 1",
+    "units": [
+      {
+        "id": "u1",
+        "name": "Unit 1: How Scientists Work",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "How Scientists Work"
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "name": "Unit 2: The Engineering Process",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "The Engineering Process"
+          }
+        ]
+      },
+      {
+        "id": "u3",
+        "name": "Unit 3: Cells to Body Systems",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Cells to Body Systems"
+          }
+        ]
+      },
+      {
+        "id": "u4",
+        "name": "Unit 4: How Living Things Grow and Reproduce",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "How Living Things Grow and Reproduce"
+          }
+        ]
+      },
+      {
+        "id": "u5",
+        "name": "Unit 5: Ecosystems",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Ecosystems"
+          }
+        ]
+      },
+      {
+        "id": "u6",
+        "name": "Unit 6: Energy and Ecosystems",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Energy and Ecosystems"
+          }
+        ]
+      },
+      {
+        "id": "u7",
+        "name": "Unit 7: Natural Resources",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Natural Resources"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "journeys",
+    "emoji": "📚",
+    "name": "Journeys 6",
+    "subtitle": "Grade 6",
+    "units": [
+      {
+        "id": "u1",
+        "name": "Unit 1: Lessons 1–5",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 1: The School Story"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 2: Knots in My Yo-Yo String"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 3: The Making of a Book"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 4: The ACES Phone"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 5: The Myers Family"
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "name": "Unit 2: Lessons 6–10",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 6: The Boy Who Saved Baseball"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 7: Do Knot Enter"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 8: Science Friction"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 9: Kensuke’s Kingdom"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 10: Children of the Midnight Sun"
+          }
+        ]
+      },
+      {
+        "id": "u3",
+        "name": "Unit 3: Lessons 11–15",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 11: The Great Fire"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 12: Airborn"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 13: Onward"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 14: Any Small Goodness"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 15: Team Moon"
+          }
+        ]
+      },
+      {
+        "id": "u4",
+        "name": "Unit 4: Lessons 16–20",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 16: The Real Vikings"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 17: The Emperor’s Silent Army"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 18: The Hero and the Minotaur"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 19: The Princess Who Became a King"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 20: Bodies from the Ash"
+          }
+        ]
+      },
+      {
+        "id": "u5",
+        "name": "Unit 5: Lessons 21–25",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 21: All Alone in the Universe"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 22: First to Fly"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 23: Number the Stars"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 24: Harriet Tubman"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 25: Robotics"
+          }
+        ]
+      },
+      {
+        "id": "u6",
+        "name": "Unit 6: Lessons 26–30",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Lesson 26: Space Trash"
+          },
+          {
+            "id": "l2",
+            "name": "Lesson 27: Denali Dog Sled Journal"
+          },
+          {
+            "id": "l3",
+            "name": "Lesson 28: Vanishing Act"
+          },
+          {
+            "id": "l4",
+            "name": "Lesson 29: Elephants on the Savannah"
+          },
+          {
+            "id": "l5",
+            "name": "Lesson 30: Storm Chasers"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "social",
+    "emoji": "🌍",
+    "name": "Social Studies 6",
+    "subtitle": "World History",
+    "units": [
+      {
+        "id": "u1",
+        "name": "Unit 1: Mapping Our World",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Mapping Our World"
+          }
+        ]
+      },
+      {
+        "id": "u2",
+        "name": "Unit 2: World Geography",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "World Geography"
+          }
+        ]
+      },
+      {
+        "id": "u3",
+        "name": "Unit 3: Climate & the Environment",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Climate & the Environment"
+          }
+        ]
+      },
+      {
+        "id": "u4",
+        "name": "Unit 4: World’s Early People",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "World’s Early People"
+          }
+        ]
+      },
+      {
+        "id": "u5",
+        "name": "Unit 5: Communities Change",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "Communities Change"
+          }
+        ]
+      },
+      {
+        "id": "u6",
+        "name": "Unit 6: The 21st Century",
+        "lessons": [
+          {
+            "id": "l1",
+            "name": "The 21st Century"
+          }
+        ]
+      }
+    ]
+  }
+]

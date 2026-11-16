@@ -1,0 +1,7 @@
+/* Multisubject navigation: development branch only */
+.subject-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 10px}
+.subject-tab{border:2px solid #9ac9a6;background:#fff;border-radius:999px;padding:10px 18px;font-weight:800;color:#275b47}
+.subject-tab:hover,.subject-tab:focus-visible{background:#e5f8e9;outline-offset:3px}
+.subject-tab.active{background:#26765b;color:#fff;border-color:#26765b}
+.subject-note{min-height:1.5em}
+.book[hidden]{display:none!important}

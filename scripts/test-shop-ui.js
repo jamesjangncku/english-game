@@ -50,4 +50,7 @@ vm.runInContext("shopFilter='badge';renderShop()",context);
 assert.equal(element('shopItems').children.length,4);
 vm.runInContext("shopFilter='scene';renderShop()",context);
 assert.equal(element('shopItems').children.length,4);
+const css=fs.readFileSync('style.css','utf8');
+assert(css.includes('.mascot-wrap img.mascot')&&css.includes('width:100%;')&&css.includes('height:100%;')&&css.includes('aspect-ratio:336 / 246'),'Avatar crop must preserve 336x246 atlas cell ratio');
+assert(css.includes('#shop .shop-sidebar .reward-preview')&&css.includes('#shop .reward-preview img.shop-portrait'),'Shop preview and homepage character must use a consistent fixed aspect ratio');
 console.log('PASS: V9 shop renders 12 cards and 4 badges, buys hat once, changes complete portrait, toggles equipment, and filters');

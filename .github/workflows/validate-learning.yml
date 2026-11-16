@@ -24,6 +24,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check game.js
+          node --check rewards.js
           node --check subject-navigation.js
           node --check data.js
           node --check reading.js
@@ -31,3 +32,5 @@ jobs:
         run: node scripts/validate-learning.js
       - name: Audit all rewritten examples
         run: node scripts/audit-examples.js
+      - name: Verify star shop and open lessons
+        run: node scripts/test-rewards.js

@@ -30,16 +30,16 @@
   'grammar-badge':'<path d="M180 84L250 111V165Q226 210 180 230Q133 210 110 165V111Z" fill="#8cbfff" stroke="#e8f8ff" stroke-width="10"/><path d="M139 172L205 109" stroke="#fff8d4" stroke-width="13"/><path d="M155 165L211 103" stroke="#e2ac4d" stroke-width="4"/><path d="M208 101Q227 89 239 100L216 116Z" fill="#fff"/>',
   'review-badge':'<path d="M180 84L193 128L235 130L204 159L215 202L180 182L145 202L156 159L125 130L167 128Z" fill="#ffeb7d" stroke="#bf7b23" stroke-width="6"/><path d="M138 203Q180 189 222 204L214 226Q180 215 146 226Z" fill="#fff2d0" stroke="#9f692b" stroke-width="4"/>'
  };
- return surround('<circle cx="180" cy="147" r="96" fill="url(#gold)" stroke="#c9822d" stroke-width="12"/><circle cx="180" cy="147" r="77" fill="'+(type==='reading-badge'?'#efd8fa':type==='grammar-badge'?'#c5e9ff':'#fef3bc')+'" stroke="#fff3c4" stroke-width="7"/>'
+ return frame(surround('<circle cx="180" cy="147" r="96" fill="url(#gold)" stroke="#c9822d" stroke-width="12"/><circle cx="180" cy="147" r="77" fill="'+(type==='reading-badge'?'#efd8fa':type==='grammar-badge'?'#c5e9ff':'#fef3bc')+'" stroke="#fff3c4" stroke-width="7"/>'
  +'<g fill="none" stroke="#c7952b" stroke-width="6"><path d="M90 191Q65 147 101 102M270 191Q293 147 259 102"/></g>'
  +'<g fill="#4eae77"><ellipse cx="101" cy="105" rx="9" ry="20" transform="rotate(-26 101 105)"/><ellipse cx="85" cy="137" rx="9" ry="19" transform="rotate(-45 85 137)"/><ellipse cx="261" cy="105" rx="9" ry="20" transform="rotate(26 261 105)"/><ellipse cx="275" cy="137" rx="9" ry="19" transform="rotate(45 275 137)"/></g>'
- +(icons[type]||icons['word-badge']));
+ +(icons[type]||icons['word-badge'])));
  };
  const art={
- 'explorer-hat':surround(hatExplorer),
- 'magic-hat':surround(hatWizard,'violet'),
- 'hero-cape':surround(cape),
- 'star-glasses':surround(glasses),
+ 'explorer-hat':frame(surround(hatExplorer)),
+ 'magic-hat':frame(surround(hatWizard,'violet')),
+ 'hero-cape':frame(surround(cape)),
+ 'star-glasses':frame(surround(glasses)),
  treehouse:frame(treehouse),
  castle:frame(castle),
  'star-library':frame(library),
@@ -56,7 +56,7 @@
  const behind=capeOn?'<path d="M115 228Q60 275 33 332Q113 323 180 344Q245 327 333 337Q297 283 245 226Z" fill="url(#red)" stroke="#a32952" stroke-width="7"/>':'';
  const body='<ellipse cx="180" cy="275" rx="122" ry="102" fill="#b56c35"/><ellipse cx="180" cy="288" rx="85" ry="75" fill="#ffead4"/><ellipse cx="75" cy="257" rx="35" ry="59" transform="rotate(23 75 257)" fill="#dc9657"/><ellipse cx="296" cy="259" rx="35" ry="59" transform="rotate(-25 296 259)" fill="#dc9657"/><ellipse cx="103" cy="339" rx="43" ry="24" fill="#fff0d5"/><ellipse cx="266" cy="340" rx="43" ry="24" fill="#fff0d5"/>';
  const face='<circle cx="89" cy="132" r="34" fill="#a6633d" stroke="#73452e" stroke-width="7"/><circle cx="89" cy="133" r="22" fill="#e99a98"/><circle cx="271" cy="132" r="34" fill="#a6633d" stroke="#73452e" stroke-width="7"/><circle cx="271" cy="133" r="22" fill="#e99a98"/><ellipse cx="180" cy="176" rx="125" ry="102" fill="#ce823d"/><path d="M151 85Q169 91 179 103Q193 88 215 86Q241 118 230 186Q216 234 180 267Q144 229 129 180Q119 119 151 85Z" fill="#fff1df"/><ellipse cx="114" cy="208" rx="59" ry="47" fill="#ffebd3"/><ellipse cx="246" cy="208" rx="59" ry="47" fill="#ffebd3"/><ellipse cx="123" cy="171" rx="13" ry="18" fill="#261f24"/><ellipse cx="241" cy="171" rx="13" ry="18" fill="#261f24"/><circle cx="128" cy="165" r="5" fill="#fff"/><circle cx="246" cy="165" r="5" fill="#fff"/><path d="M163 218Q180 228 197 218Q181 241 163 218Z" fill="#ef99a1"/><path d="M181 228V246M181 246Q157 259 142 239M181 246Q205 259 219 239" stroke="#8b514b" stroke-width="4" fill="none" stroke-linecap="round"/>';
- const hatImg=hat==='magic-hat'?'<g transform="translate(66,-6) scale(.64)">'+hatWizard+'</g>':hat==='explorer-hat'?'<g transform="translate(51,22) scale(.73)">'+hatExplorer+'</g>':'<path d="M70 118Q82 58 180 50Q278 58 289 116Q181 132 70 118Z" fill="#cc915c" stroke="#8b633e" stroke-width="8"/><path d="M47 122Q170 104 314 123Q268 146 77 142Z" fill="#ae774a" stroke="#7e5738" stroke-width="6"/><path d="M96 111Q181 102 267 111" stroke="#65472e" stroke-width="13" fill="none"/>';
+ const hatImg=hat==='magic-hat'?'<g transform="translate(66,-6) scale(.64)">'+hatWizard+'</g>':hat==='explorer-hat'?'<g transform="translate(48,-24) scale(.77)">'+hatExplorer+'</g>':'<path d="M70 118Q82 58 180 50Q278 58 289 116Q181 132 70 118Z" fill="#cc915c" stroke="#8b633e" stroke-width="8"/><path d="M47 122Q170 104 314 123Q268 146 77 142Z" fill="#ae774a" stroke="#7e5738" stroke-width="6"/><path d="M96 111Q181 102 267 111" stroke="#65472e" stroke-width="13" fill="none"/>';
  const glassImg=glassesOn?'<g transform="translate(6,50) scale(.94)">'+glasses+'</g>':'';
  const shirt='<path d="M143 273Q180 294 218 274L219 345H143Z" fill="#6c895d"/><path d="M145 275L180 308L215 275" fill="none" stroke="#e2b785" stroke-width="11"/><circle cx="181" cy="306" r="13" fill="#ffca55" stroke="#a7772b" stroke-width="4"/>';
  return frame(back+behind+body+shirt+face+hatImg+glassImg,360,360);

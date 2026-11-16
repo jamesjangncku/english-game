@@ -10,4 +10,7 @@ for(const q of qs){
  if(status!=='new_question_specific')pending.push(q.id);
 }
 console.log(JSON.stringify({total:qs.length,status:byStatus,missing,remaining:pending.length},null,2));
-if(qs.length!==501||missing.length)process.exitCode=1;
+const legacy=qs.filter(q=>q.example_status!=='new_question_specific').map(q=>q.id);
+const badIds=qs.filter(q=>!q.id||!q.example_en||!q.example_zh).map(q=>q.id);
+console.log('Example audit:',qs.length,'total;',legacy.length,'not rewritten;',badIds.length,'missing fields');
+if(qs.length!==501||missing.length||legacy.length||badIds.length)process.exitCode=1;

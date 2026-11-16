@@ -28,6 +28,7 @@ jobs:
           node --check game.js
           node --check rewards.js
           node --check reward-art.js
+          node --check approved-art.js
           node --check subject-navigation.js
           node --check data.js
           node --check reading.js

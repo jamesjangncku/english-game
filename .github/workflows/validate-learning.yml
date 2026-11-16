@@ -37,3 +37,5 @@ jobs:
         run: node scripts/audit-examples.js
       - name: Verify star shop and open lessons
         run: node scripts/test-rewards.js
+      - name: Test V9 shop interface
+        run: node scripts/test-shop-ui.js

@@ -29,3 +29,5 @@ jobs:
           node --check reading.js
       - name: Validate catalog and questions
         run: node scripts/validate-learning.js
+      - name: Audit all rewritten examples
+        run: node scripts/audit-examples.js

@@ -43,7 +43,8 @@ assert(fs.readFileSync('assets/v9-approved-art-atlas.svg','utf8').includes('data
 assert(game.includes("state.correctIds.includes(q.id)"));
 assert(game.includes("GAME_REWARD_RULES.pointsForAnswer"));
 assert(game.includes("function renderShop()"));
-assert(game.includes("GAME_REWARD_ART.portrait"));
+assert(game.includes("GAME_APPROVED_ART.apply"));
+assert(fs.existsSync("approved-art.js"));
 assert(!game.includes("unlockLesson")&&!game.includes("requiredStars"));
 const dataContext={window:{}};vm.runInNewContext(fs.readFileSync('data.js','utf8'),dataContext,{timeout:10000});
 const catalog=dataContext.window.GAME_CATALOG,qs=dataContext.window.GAME_QUESTIONS;

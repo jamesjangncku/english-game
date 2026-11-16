@@ -50,8 +50,8 @@ showModes=function(items){
 
 /* V9: cosmetics and collectible gallery, independent of all lessons. */
 let shopFilter='all';
-const owned=(id)=>state.purchased.includes(id);
-const equipped=(item)=>state.equipped?.[item.slot]===item.id;
+function owned(id){return state.purchased.includes(id);}
+function equipped(item){return state.equipped?.[item.slot]===item.id;}
 function syncOutfits(){
  const hat=owned(state.equipped?.hat)?state.equipped.hat:null;
  const cape=owned(state.equipped?.cape)?state.equipped.cape:null;

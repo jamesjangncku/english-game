@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-16",
+  "status": "pending_review",
+  "source": "GitHub data.js and uploaded V3.2 archive",
+  "deployed_question_counts": {
+    "science": 160,
+    "journeys": 150,
+    "social": 191,
+    "total": 501
+  },
+  "deployed_standalone_reading_questions": 0,
+  "archive_reading_questions": {
+    "science": 350,
+    "journeys": 1500,
+    "social": 300,
+    "total": 2150
+  },
+  "issues": [
+    {
+      "severity": "high",
+      "code": "READING_FILE_EMPTY",
+      "message": "reading.js in GitHub branch is empty, while local V3.2 ZIP contains 2150 original practice reading questions. Do not automatically publish before quality review."
+    },
+    {
+      "severity": "medium",
+      "code": "GENERIC_PASSAGE_TOKENS",
+      "message": "Sampled ZIP passages contain literal lesson placeholders such as u1 and l4. Human review and rewriting required before restoring."
+    },
+    {
+      "severity": "medium",
+      "code": "SOURCE_SYNC",
+      "message": "data/catalog.json and data/questions.json are not currently loaded by index.html; actual runtime uses data.js."
+    }
+  ],
+  "release_approved": false
+}

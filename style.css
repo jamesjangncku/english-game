@@ -23,3 +23,50 @@
 .shop-card .shop-price{margin-top:auto;font-weight:900;color:#9c6914}
 .shop-card button{margin-top:10px}
 @media(max-width:700px){.shop-items{grid-template-columns:1fr}.mascot-wrap .outfit{font-size:2.4rem}.mascot-wrap .hat-outfit{left:calc(50% - 20px)}}
+
+
+/* V9 illustrated reward shop */
+.version-mark{display:inline-flex;vertical-align:middle;font-size:1rem;line-height:1.2;padding:7px 12px;color:white;background:linear-gradient(140deg,#a850e3,#7a46c6);border:2px solid #fff1ad;border-radius:30px;text-shadow:none;box-shadow:0 3px 0 #5d3a94}
+.hero-outfit-caption{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis;background:#fff9e6e8;border:1px solid #e4c57a;border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:800;text-align:center;box-shadow:0 3px 9px #86553b24}
+#shop{--shop-border:#edce86}
+.shop-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:18px 0 22px}
+.shop-heading h2{font-size:clamp(1.65rem,3vw,2.4rem);color:#75501e;margin:7px 0}
+.shop-heading p{max-width:650px;line-height:1.65}
+.shop-balance{margin:0;white-space:nowrap;background:linear-gradient(145deg,#fff6d1,#ffe6a0);box-shadow:0 5px 0 #dbb669;color:#79501b}
+.shop-layout{display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr);align-items:start;gap:22px}
+.shop-sidebar{position:sticky;top:18px;background:#fffdf4;border:3px solid #f3d99f;border-radius:25px;padding:14px;box-shadow:0 8px 24px #6f603726}
+.shop-sidebar h3{font-size:1.05rem;color:#75501e;margin:22px 2px 12px}
+.reward-preview{min-height:auto;max-width:none;margin:0 0 12px;padding:12px;background:linear-gradient(145deg,#d7f4f7,#fef4d7);border:2px solid #f1d19b;border-radius:20px;box-shadow:inset 0 3px 10px #fff9}
+.shop-portrait{width:min(100%,220px);aspect-ratio:1;display:block;margin:auto;object-fit:contain;filter:drop-shadow(0 5px 8px #76513f22)}
+.shop-portrait-label{margin:2px 0 5px;text-align:center;color:#73512e;font-weight:850;font-size:.88rem}
+.equip-summary{padding:10px 12px;background:#f5f8e9;border-radius:15px;color:#5c6143;line-height:1.5;font-size:.86rem}
+.equip-summary p{margin:3px 0}
+.collection-shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.badge-mini{position:relative;min-width:0;border-radius:13px;background:#e9e9e2;border:2px solid #dedbd2;opacity:.5;padding:5px;text-align:center}
+.badge-mini.badge-owned{background:#fff5da;border-color:#e7be69;opacity:1;box-shadow:0 3px 7px #b27a3d22}
+.badge-mini img{display:block;width:100%;aspect-ratio:6/4;object-fit:cover;border-radius:9px}
+.badge-mini small{display:block;font-size:.69rem;font-weight:750;color:#6e573b;margin-top:4px}
+.shop-main{min-width:0}
+.shop-filters{display:flex;flex-wrap:wrap;gap:8px;background:#fffcf3;border:2px solid #f1dfb3;border-radius:20px;padding:10px;margin-bottom:15px}
+.shop-filters button{flex:1;min-width:110px;padding:11px 14px;border-radius:13px;background:#f0eee4;color:#6b6246;font-weight:800}
+.shop-filters button.active{background:linear-gradient(135deg,#ffdc64,#f9b83d);color:#664511;box-shadow:0 3px 0 #d6982e}
+.shop-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.shop-card.v9-item{padding:0 0 13px;border:2px solid #efdcae;border-radius:20px;overflow:hidden;box-shadow:0 5px 11px #6b513226;background:linear-gradient(180deg,#fffdf7,#fff5df);gap:8px}
+.shop-card.v9-item.purchased{border-color:#9ac89a}
+.shop-card.v9-item h3{font-size:1.02rem;line-height:1.4;color:#6b471e;margin:0 12px}
+.shop-card.v9-item .shop-description{color:#796c5d;font-size:.79rem;line-height:1.55;min-height:2.4em;margin:0 12px}
+.shop-art{position:relative;background:#fff1c3;aspect-ratio:6/4.4;overflow:hidden}
+.shop-art img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.shop-card.v9-item:hover .shop-art img{transform:scale(1.055)}
+.rarity{position:absolute;top:9px;left:9px;font-size:.72rem;font-weight:850;border-radius:20px;padding:4px 10px;color:white;box-shadow:0 2px 5px #4c3f3f40;background:#777}
+.rarity.rare{background:linear-gradient(120deg,#9f64da,#7134ae)}
+.rarity.legendary{background:linear-gradient(120deg,#db7831,#ad456b)}
+.rarity.common{background:linear-gradient(120deg,#8a9a8b,#6c8275)}
+.shop-card.v9-item .shop-price{margin:1px 12px 0;color:#986118;font-size:1.05rem;font-weight:900}
+.shop-buy{margin:2px 12px 0;border-radius:13px;padding:11px 7px;font-weight:850;font-size:.88rem;background:linear-gradient(135deg,#26995c,#12774f);color:white;box-shadow:0 3px 0 #0b6441}
+.shop-buy:disabled{opacity:.58;box-shadow:none}
+.shop-card.v9-item.purchased .shop-buy:not(:disabled){background:linear-gradient(135deg,#4e88cb,#4468ad);box-shadow:0 3px 0 #38599a}
+.shop-message{min-height:1.6em;padding:8px;color:#397c4f;font-weight:800}
+@media(max-width:980px){.shop-layout{grid-template-columns:230px minmax(0,1fr)}.shop-items{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.shop-layout{grid-template-columns:1fr}.shop-sidebar{position:static}.shop-sidebar .reward-preview{max-width:360px;margin:auto}.collection-shelf{grid-template-columns:repeat(4,minmax(0,1fr))}.shop-items{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.shop-card.v9-item h3{font-size:.93rem}.shop-card.v9-item .shop-description{font-size:.73rem}.shop-buy{font-size:.8rem}.hero-outfit-caption{font-size:.65rem;bottom:-2px;max-width:130px}}
+@media(max-width:400px){.shop-items{grid-template-columns:1fr}.collection-shelf{grid-template-columns:repeat(2,minmax(0,1fr))}}

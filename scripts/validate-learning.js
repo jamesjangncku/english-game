@@ -34,7 +34,15 @@ else {
       for(const q of reading){
         if(!q.id||ids.has(q.id)) errors.push('Duplicate/missing reading ID: '+q.id);
         ids.add(q.id);
-        if(!valid.has([q.book,q.unit,q.lesson].join('/'))) errors.push('Orphan reading: '+q.id);
+        // Legacy reading bank numbers Journeys lessons 1–5 inside each unit.
+        // The catalog numbers Journeys lessons continuously from 1 to 30.
+        const lessonKey=[q.book,q.unit,q.lesson].join('/');
+        const unitNo=/^u([1-6])$/.exec(q.unit||'');
+        const lessonNo=/^l([1-5])$/.exec(q.lesson||'');
+        const normalizedKey=q.book==='journeys'&&unitNo&&lessonNo
+          ? ['journeys',q.unit,'l'+((Number(unitNo[1])-1)*5+Number(lessonNo[1]))].join('/')
+          : lessonKey;
+        if(!valid.has(lessonKey)&&!valid.has(normalizedKey)) errors.push('Orphan reading: '+q.id);
         if(!q.passage||!q.question) errors.push('Missing reading passage/question: '+q.id);
         if(!Array.isArray(q.options)||!Number.isInteger(q.answer)||q.answer<0||q.answer>=q.options.length) errors.push('Invalid reading answer: '+q.id);
       }

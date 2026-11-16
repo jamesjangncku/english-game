@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'data.js'
+      - 'reading.js'
+      - 'data/catalog.json'
+      - 'data/questions.json'
       - 'game.js'
       - 'subject-navigation.js'
       - 'scripts/**'
@@ -23,5 +26,6 @@ jobs:
           node --check game.js
           node --check subject-navigation.js
           node --check data.js
+          node --check reading.js
       - name: Validate catalog and questions
         run: node scripts/validate-learning.js

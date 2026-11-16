@@ -5,3 +5,10 @@
 .subject-tab.active{background:#26765b;color:#fff;border-color:#26765b}
 .subject-note{min-height:1.5em}
 .book[hidden]{display:none!important}
+
+.lesson-review{margin:24px 0;padding:20px;background:#fffdf5;border:2px solid #e2d6ac;border-radius:20px}
+.lesson-review h3{margin-top:0}
+.review-item{margin:10px 0;padding:12px 14px;border:1px solid #c8dfcb;border-radius:12px;background:#fff}
+.review-item summary{font-weight:700;cursor:pointer;line-height:1.5}
+.review-item p{margin:10px 0;line-height:1.6}
+#studyMode{margin:8px}

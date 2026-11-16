@@ -58,10 +58,8 @@ function syncOutfits(){
  const glasses=owned(state.equipped?.glasses)?state.equipped.glasses:null;
  const scene=owned(state.equipped?.home)?state.equipped.home:null;
  const img=$('heroMascot');
- if(hat||cape||glasses){
-   img.src=window.GAME_REWARD_ART.portrait({hat,cape,glasses});
-   img.alt='已裝扮的豚鼠探險家';
- }else{img.src='character.png';img.alt='豚鼠探險家';}
+ window.GAME_APPROVED_ART.apply(img,window.GAME_APPROVED_ART.mainOutfit({hat,cape,glasses}));
+ img.alt='精緻造型的豚鼠探險家';
  const labels=[];
  for(const id of [hat,cape,glasses,scene]){
   const item=window.GAME_REWARDS.find(r=>r.id===id);
@@ -90,8 +88,8 @@ function renderShop(){
  }
  const preview=$('rewardPreview');preview.replaceChildren();
  const img=document.createElement('img');
- img.src=art.portrait(state.equipped);
- img.className='shop-portrait';img.alt='豚鼠角色完整裝扮示意圖';preview.append(img);
+ window.GAME_APPROVED_ART.apply(img,window.GAME_APPROVED_ART.mainOutfit(state.equipped));
+ img.className='shop-portrait';img.alt='已核准的豚鼠精緻角色造型';preview.append(img);
  const hint=document.createElement('p');hint.className='shop-portrait-label';
  hint.textContent='我的冒險夥伴 · 自由換裝';
  preview.append(hint);
@@ -106,7 +104,7 @@ function renderShop(){
  const shelf=$('collectionShelf');shelf.replaceChildren();
  for(const badge of items.filter(x=>x.category==='badge')){
   const box=document.createElement('div');box.className='badge-mini'+(owned(badge.id)?' badge-owned':'');
-  const picture=document.createElement('img');picture.src=art.item(badge.id);picture.alt=badge.name;
+  const picture=document.createElement('img');window.GAME_APPROVED_ART.apply(picture,badge.id);picture.alt=badge.name;
   const label=document.createElement('small');label.textContent=owned(badge.id)?badge.name:'尚未收藏';
   box.append(picture,label);shelf.append(box);
  }
@@ -115,7 +113,7 @@ function renderShop(){
   const card=document.createElement('article');card.className='shop-card v9-item';
   if(owned(item.id))card.classList.add('purchased');
   const artwrap=document.createElement('div');artwrap.className='shop-art';
-  const picture=document.createElement('img');picture.src=art.item(item.id);picture.alt=item.name+'商品插畫';picture.loading='lazy';
+  const picture=document.createElement('img');window.GAME_APPROVED_ART.apply(picture,item.id);picture.alt=item.name+'商品插畫';picture.loading='lazy';
   artwrap.append(picture);
   const peek=document.createElement('button');peek.type='button';peek.className='shop-peek';peek.textContent='⌕';peek.setAttribute('aria-label','查看「'+item.name+'」商品大圖');peek.onclick=()=>showRewardDetail(item);artwrap.append(peek);
   const rarity=document.createElement('span');rarity.className='rarity '+(item.rarity==='傳說'?'legendary':item.rarity==='稀有'?'rare':'common');
@@ -153,12 +151,12 @@ function renderRewardShowcase(items,art){
  const badgeItems=items.filter(x=>x.category==='badge'&&owned(x.id));
  for(const [target,list,placeholder] of [[equip,equippedItems,'目前沒有裝備，快來挑選喜歡的配件！'],[badges,badgeItems,'收集漂亮的徽章，記錄每一步學習成果！']]){
   if(!list.length){const p=document.createElement('p');p.className='showcase-placeholder';p.textContent=placeholder;target.append(p);}
-  for(const item of list){const c=document.createElement('button');c.type='button';c.className='showcase-item';const img=document.createElement('img');img.src=art.item(item.id);img.alt=item.name;const title=document.createElement('span');title.textContent=item.name;c.append(img,title);c.onclick=()=>showRewardDetail(item);target.append(c);}
+  for(const item of list){const c=document.createElement('button');c.type='button';c.className='showcase-item';const img=document.createElement('img');window.GAME_APPROVED_ART.apply(img,item.id);img.alt=item.name;const title=document.createElement('span');title.textContent=item.name;c.append(img,title);c.onclick=()=>showRewardDetail(item);target.append(c);}
  }
 }
 function showRewardDetail(item){
  const dialog=$('rewardDetail');dialog.classList.remove('hide');
- $('detailArt').src=window.GAME_REWARD_ART.item(item.id);$('detailArt').alt=item.name+'大圖';
+ window.GAME_APPROVED_ART.apply($('detailArt'),item.id);$('detailArt').alt=item.name+'大圖';
  $('detailTitle').textContent=item.name;$('detailDescription').textContent=item.description;
  $('detailPrice').textContent=owned(item.id)?'✓ 已收藏':'⭐ '+item.price+' 顆星星';
  $('detailRarity').textContent=item.rarity;

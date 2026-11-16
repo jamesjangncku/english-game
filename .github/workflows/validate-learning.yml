@@ -1,0 +1,42 @@
+name: Validate learning database
+on:
+  pull_request:
+    paths:
+      - 'data.js'
+      - 'reading.js'
+      - 'data/catalog.json'
+      - 'data/questions.json'
+      - 'game.js'
+      - 'rewards.js'
+      - 'reward-art.js'
+      - 'subject-navigation.js'
+      - 'scripts/**'
+      - '.github/workflows/validate-learning.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check game.js
+          node --check rewards.js
+          node --check reward-art.js
+          node --check approved-art.js
+          node --check subject-navigation.js
+          node --check data.js
+          node --check reading.js
+      - name: Validate catalog and questions
+        run: node scripts/validate-learning.js
+      - name: Audit all rewritten examples
+        run: node scripts/audit-examples.js
+      - name: Verify star shop and open lessons
+        run: node scripts/test-rewards.js
+      - name: Test V9 shop interface
+        run: node scripts/test-shop-ui.js

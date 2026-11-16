@@ -1,0 +1,20 @@
+/* Multisubject navigation: development branch only */
+.subject-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 10px}
+.subject-tab{border:2px solid #9ac9a6;background:#fff;border-radius:999px;padding:10px 18px;font-weight:800;color:#275b47}
+.subject-tab:hover,.subject-tab:focus-visible{background:#e5f8e9;outline-offset:3px}
+.subject-tab.active{background:#26765b;color:#fff;border-color:#26765b}
+.subject-note{min-height:1.5em}
+.book[hidden]{display:none!important}
+
+.lesson-review{margin:24px 0;padding:20px;background:#fffdf5;border:2px solid #e2d6ac;border-radius:20px}
+.lesson-review h3{margin-top:0}
+.review-item{margin:10px 0;padding:12px 14px;border:1px solid #c8dfcb;border-radius:12px;background:#fff}
+.review-item summary{font-weight:700;cursor:pointer;line-height:1.5}
+.review-item p{margin:10px 0;line-height:1.6}
+#studyMode{margin:8px}
+
+.lesson-search{width:100%;max-width:640px;padding:12px 16px;border:2px solid #a5cbb2;border-radius:14px;font:inherit;background:#fff;color:#294437}
+.lesson-search:focus-visible{outline:3px solid #7ecf9b;outline-offset:2px}
+.lesson-search-results:not(:empty){max-width:740px;margin:10px 0 20px;padding:12px;border-radius:16px;background:#f6fff8;border:1px solid #c9e3cf}
+.lesson-search-result{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;background:#fff;border:1px solid #b6d9c0;border-radius:10px;color:#275b47}
+.lesson-search-result:hover,.lesson-search-result:focus-visible{background:#e1f7e8}

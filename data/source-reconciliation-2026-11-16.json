@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-16",
+  "status": "source_reconciliation_in_progress",
+  "source_files": [
+    "Journeys_G6_Lessons_01_30_Study_DB_v3(1).json",
+    "ScienceFusion_G5_Vol1_Units01_07_Study_DB_v1(1).json",
+    "Mumu_English_Adventure_V3_2_JSON_Updated.zip"
+  ],
+  "source_inventory": {
+    "vocabulary": 620,
+    "questions": 310,
+    "examples": 124,
+    "lesson_notes": 62
+  },
+  "v32_backup_question_count": 501,
+  "source_questions_matching_v32_backup_by_id": 310,
+  "new_question_ids_in_two_source_jsons": 0,
+  "unverified": [
+    "Current GitHub branch questions not compared field-by-field against backup",
+    "Not all historical conversations directly retrievable",
+    "Original textbook passage text not available",
+    "Grammar Plus 3 worksheet image questions not extracted",
+    "Social Studies lacks separate full study JSON"
+  ],
+  "rules": [
+    "Do not duplicate question IDs",
+    "Preserve source_file, source_item_id and verification status",
+    "Mark author-created practice as not verbatim textbook",
+    "Keep new materials staged until review",
+    "Do not merge to main without approval"
+  ]
+}

@@ -1,4 +1,15 @@
-'use strict';const $=id=>document.getElementById(id),catalog=window.GAME_CATALOG||[],questions=window.GAME_QUESTIONS||[];const KEY='guinea_game_v2';let book=null,unit=null,lesson=null,pool=[],pos=0,score=0,locked=false,review=false;let currentOptions=[],currentAnswer=-1,readingSession=false;let state;try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{state={}}state={stars:0,runs:0,wrong:[],history:[],correctIds:[],purchased:[],equipped:{hat:null,cape:null,glasses:null,home:null},...state};if(!Array.isArray(state.correctIds))state.correctIds=[];if(!Array.isArray(state.purchased))state.purchased=[];if(!state.equipped||typeof state.equipped!=='object')state.equipped={hat:null,cape:null,glasses:null,home:null};state.stars=Math.max(0,Number(state.stars)||0);let earnedThisRun=0;const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}};function nav(page){['home','select','quiz','finish','stats','shop'].forEach(x=>$(x).classList.toggle('hide',x!==page));['navHome','navWrong','navStats','navShop'].forEach(x=>$(x).classList.remove('active'));if(page==='home')$('navHome').classList.add('active');if(page==='stats')$('navStats').classList.add('active');if(page==='shop'){$('navShop').classList.add('active');renderShop();}syncOutfits();$('stars').textContent='⭐ '+state.stars+' 星星';$('done').textContent='🏆 '+state.runs+' 次闖關';window.scrollTo({top:0,behavior:'smooth'})}function speak(s){if(!('speechSynthesis'in window))return alert('瀏覽器不支援語音');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s.replaceAll('_____','blank'));u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}function renderBooks(){$('books').replaceChildren();catalog.forEach(b=>{const d=document.createElement('article');d.className='book';const count=questions.filter(q=>q.book===b.id).length;d.innerHTML=`<div class="emoji">${b.emoji}</div><h3>${b.name}</h3><p>${b.subtitle}</p><p>${b.units.length} Units · ${count} 題練習題</p>`;const btn=document.createElement('button');btn.textContent='開始冒險 →';btn.onclick=()=>chooseBook(b.id);d.append(btn);$('books').append(d)})}function chooseBook(id){book=catalog.find(b=>b.id===id);$('bookTitle').textContent=book.emoji+' '+book.name;$('units').replaceChildren();$('lessons').replaceChildren();$('modeChoice').classList.add('hide');book.units.forEach(u=>{const b=document.createElement('button');b.className='unit';b.textContent='📖 '+u.name;b.onclick=()=>chooseUnit(u.id);$('units').append(b)});nav('select')}function chooseUnit(id){unit=book.units.find(u=>u.id===id);$('lessons').replaceChildren();if(unit.lessons.length===1){lesson=unit.lessons[0];const items=questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===lesson.id);showModes(items);return;}const title=document.createElement('h3');title.textContent=unit.name+' · 課次';$('lessons').append(title);unit.lessons.forEach(l=>{const n=questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===l.id).length;const b=document.createElement('button');b.className='lesson';b.disabled=n===0;b.textContent=(n?'🎮 ':'🔒 ')+l.name;const small=document.createElement('small');small.textContent=n?`題庫 ${n} 題 · 每次最多隨機20題`:'題庫待補，暫未開放';b.append(small);b.onclick=()=>{lesson=l;showModes(questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===l.id))};$('lessons').append(b)});[...$('units').children].forEach((b,i)=>b.classList.toggle('active',book.units[i].id===id))}function start(items,isReview=false,isReading=false){readingSession=isReading;if(!items.length){alert('這個範圍尚未有題目。');return}pool=[...items];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}if(readingSession){const key='last_reading_'+book.id+'_'+unit.id+'_'+lesson.id;let previous=[];try{previous=JSON.parse(localStorage.getItem(key)||'[]')}catch{};const unseen=pool.filter(q=>!previous.includes(q.id));const seen=pool.filter(q=>previous.includes(q.id));pool=[...unseen,...seen].slice(0,20);try{localStorage.setItem(key,JSON.stringify(pool.map(q=>q.id)))}catch{}}else pool=pool.slice(0,20);pos=0;score=0;earnedThisRun=0;review=isReview;$('backSelect').textContent=(!isReview&&unit&&unit.lessons.length===1)?'← 返回單元':'← 返回課次';nav('quiz');renderQuestion()}function renderQuestion(){locked=false;const q=pool[pos];const order=q.options.map((_,i)=>i);for(let k=order.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[order[k],order[j]]=[order[j],order[k]];}currentOptions=order.map(i=>q.options[i]);currentAnswer=order.indexOf(q.answer);$('crumb').textContent=review?'錯題複習':`${book.name} · ${unit.name} · ${lesson.name}`;$('qcounter').textContent=`第 ${pos+1} / ${pool.length} 題`;$('qscore').textContent='⭐ '+score;$('barfill').style.width=(pos/pool.length*100)+'%';$('qtype').textContent=({vocabulary:'🔤 單字挑戰',reading:'📖 閱讀理解',grammar:'✏️ 文法練習',concept:'🧠 學科觀念'}[q.type]||'🧠 觀念理解');$('question').textContent=q.question;const passageBox=$('readingPassage');if(q.passage){passageBox.classList.remove('hide');$('readingTitle').textContent=q.passage_title||'Reading Passage';$('readingText').textContent=q.passage;}else passageBox.classList.add('hide');$('options').replaceChildren();currentOptions.forEach((x,i)=>{const b=document.createElement('button');b.className='option';b.textContent=String.fromCharCode(65+i)+'. '+x;b.onclick=()=>answer(i);$('options').append(b)});$('feedback').classList.add('hide')}function answer(i){if(locked)return;locked=true;const q=pool[pos],ok=i===currentAnswer;const bad=new Set(state.wrong);if(ok){score+=10;const first=!state.correctIds.includes(q.id);const earned=window.GAME_REWARD_RULES.pointsForAnswer(!first);state.stars+=earned;earnedThisRun+=earned;if(first)state.correctIds.push(q.id);bad.delete(q.id)}else bad.add(q.id);state.wrong=[...bad];save();[...$('options').children].forEach((b,j)=>{b.disabled=true;if(j===currentAnswer)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('verdict').textContent=ok?'🎉 答對了！豚鼠為你歡呼！':'💪 再試一次，你會更厲害！';$('explanation').textContent='正確答案：'+String.fromCharCode(65+currentAnswer)+'. '+currentOptions[currentAnswer]+'。'+q.explanation;const sameLesson=window.GAME_QUESTIONS.filter(x=>x.book===q.book&&x.unit===q.unit&&x.lesson===q.lesson);
+'use strict';
+const QUESTIONS_PER_ROUND = 7;
+const englishBooks = new Map([
+ ['journeys', 'Journeys Grade 6'],
+ ['science', 'ScienceFusion Grade 5'],
+ ['social', 'HMH Social Studies Grade 6'],
+]);
+const catalog = [...englishBooks].flatMap(([id, name]) => {
+ const book = (window.GAME_CATALOG || []).find(entry => entry.id === id);
+ return book ? [{...book, name}] : [];
+});
+const $=id=>document.getElementById(id),questions=window.GAME_QUESTIONS||[];const testMode=window.GAME_TEST_MODE;const KEY=testMode?.storageKey||'guinea_game_v2';let book=null,unit=null,lesson=null,pool=[],pos=0,score=0,locked=false,review=false;let currentOptions=[],currentAnswer=-1,readingSession=false;let state,storedState;try{storedState=localStorage.getItem(KEY);state=JSON.parse(storedState||'{}')}catch{state={}}state={stars:storedState===null?(testMode?.startingStars||0):0,runs:0,wrong:[],history:[],correctIds:[],purchased:[],equipped:{hat:null,cape:null,glasses:null,home:null},...state};if(!Array.isArray(state.correctIds))state.correctIds=[];if(!Array.isArray(state.purchased))state.purchased=[];if(!state.equipped||typeof state.equipped!=='object')state.equipped={hat:null,cape:null,glasses:null,home:null};state.stars=Math.max(0,Number(state.stars)||0);let earnedThisRun=0;const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}};if(testMode&&storedState===null)save();function nav(page){['home','select','quiz','finish','stats','shop'].forEach(x=>$(x).classList.toggle('hide',x!==page));['navHome','navWrong','navStats','navShop'].forEach(x=>$(x).classList.remove('active'));if(page==='home')$('navHome').classList.add('active');if(page==='stats')$('navStats').classList.add('active');if(page==='shop'){$('navShop').classList.add('active');renderShop();}syncOutfits();$('stars').textContent='⭐ '+state.stars+' 星星';$('done').textContent='🏆 '+state.runs+' 次闖關';window.scrollTo({top:0,behavior:'smooth'})}function speak(s){if(!('speechSynthesis'in window))return alert('瀏覽器不支援語音');speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s.replaceAll('_____','blank'));u.lang='en-US';u.rate=.85;speechSynthesis.speak(u)}function renderBooks(){$('books').replaceChildren();catalog.forEach(b=>{const d=document.createElement('article');d.className='book';const count=questions.filter(q=>q.book===b.id).length;d.innerHTML=`<div class="emoji">${b.emoji}</div><h3>${b.name}</h3><p>${b.subtitle}</p><p>${b.units.length} Units · ${count} 題練習題</p>`;const btn=document.createElement('button');btn.textContent='開始冒險 →';btn.onclick=()=>chooseBook(b.id);d.append(btn);$('books').append(d)})}function chooseBook(id){book=catalog.find(b=>b.id===id);$('bookTitle').textContent=book.emoji+' '+book.name;$('units').replaceChildren();$('lessons').replaceChildren();$('modeChoice').classList.add('hide');book.units.forEach(u=>{const b=document.createElement('button');b.className='unit';b.textContent='📖 '+u.name;b.onclick=()=>chooseUnit(u.id);$('units').append(b)});nav('select')}function chooseUnit(id){unit=book.units.find(u=>u.id===id);$('lessons').replaceChildren();if(unit.lessons.length===1){lesson=unit.lessons[0];const items=questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===lesson.id);showModes(items);return;}const title=document.createElement('h3');title.textContent=unit.name+' · 課次';$('lessons').append(title);unit.lessons.forEach(l=>{const n=questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===l.id).length;const b=document.createElement('button');b.className='lesson';b.disabled=n===0;b.textContent=(n?'🎮 ':'🔒 ')+l.name;const small=document.createElement('small');small.textContent=n?`題庫 ${n} 題 · 每次最多隨機 ${QUESTIONS_PER_ROUND} 題`:'題庫待補，暫未開放';b.append(small);b.onclick=()=>{lesson=l;showModes(questions.filter(q=>q.book===book.id&&q.unit===unit.id&&q.lesson===l.id))};$('lessons').append(b)});[...$('units').children].forEach((b,i)=>b.classList.toggle('active',book.units[i].id===id))}function start(items,isReview=false,isReading=false){readingSession=isReading;if(!items.length){alert('這個範圍尚未有題目。');return}pool=[...items];for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}if(readingSession){const key=(testMode?KEY+'_':'')+'last_reading_'+book.id+'_'+unit.id+'_'+lesson.id;let previous=[];try{previous=JSON.parse(localStorage.getItem(key)||'[]')}catch{};const unseen=pool.filter(q=>!previous.includes(q.id));const seen=pool.filter(q=>previous.includes(q.id));pool=[...unseen,...seen].slice(0,QUESTIONS_PER_ROUND);try{localStorage.setItem(key,JSON.stringify(pool.map(q=>q.id)))}catch{}}else pool=pool.slice(0,QUESTIONS_PER_ROUND);pos=0;score=0;earnedThisRun=0;review=isReview;$('backSelect').textContent=(!isReview&&unit&&unit.lessons.length===1)?'← 返回單元':'← 返回課次';nav('quiz');renderQuestion()}function renderQuestion(){locked=false;const q=pool[pos];const order=q.options.map((_,i)=>i);for(let k=order.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[order[k],order[j]]=[order[j],order[k]];}currentOptions=order.map(i=>q.options[i]);currentAnswer=order.indexOf(q.answer);$('crumb').textContent=review?'錯題複習':`${book.name} · ${unit.name} · ${lesson.name}`;$('qcounter').textContent=`第 ${pos+1} / ${pool.length} 題`;$('qscore').textContent='⭐ '+score;$('barfill').style.width=(pos/pool.length*100)+'%';$('qtype').textContent=({vocabulary:'🔤 單字挑戰',reading:'📖 閱讀理解',grammar:'✏️ 文法練習',concept:'🧠 學科觀念'}[q.type]||'🧠 觀念理解');$('question').textContent=q.question;const passageBox=$('readingPassage');if(q.passage){passageBox.classList.remove('hide');$('readingTitle').textContent=q.passage_title||'Reading Passage';$('readingText').textContent=q.passage;}else passageBox.classList.add('hide');$('options').replaceChildren();currentOptions.forEach((x,i)=>{const b=document.createElement('button');b.className='option';b.textContent=String.fromCharCode(65+i)+'. '+x;b.onclick=()=>answer(i);$('options').append(b)});$('feedback').classList.add('hide')}function answer(i){if(locked)return;locked=true;const q=pool[pos],ok=i===currentAnswer;const bad=new Set(state.wrong);if(ok){score+=10;const first=!state.correctIds.includes(q.id);const earned=window.GAME_REWARD_RULES.pointsForAnswer(!first);state.stars+=earned;earnedThisRun+=earned;if(first)state.correctIds.push(q.id);bad.delete(q.id)}else bad.add(q.id);state.wrong=[...bad];save();[...$('options').children].forEach((b,j)=>{b.disabled=true;if(j===currentAnswer)b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('verdict').textContent=ok?'🎉 答對了！豚鼠為你歡呼！':'💪 再試一次，你會更厲害！';$('explanation').textContent='正確答案：'+String.fromCharCode(65+currentAnswer)+'. '+currentOptions[currentAnswer]+'。'+q.explanation;const sameLesson=window.GAME_QUESTIONS.filter(x=>x.book===q.book&&x.unit===q.unit&&x.lesson===q.lesson);
 const repeated=sameLesson.length>1&&sameLesson.every(x=>x.example_en===q.example_en);
 const isGoPast=/past form of [“"]go[”"]/i.test(q.question)&&q.options[q.answer]?.toLowerCase()==='went';
 const exampleBox=$('exampleEn').closest('.example');
@@ -50,35 +61,60 @@ showModes=function(items){
 
 /* V9: cosmetics and collectible gallery, independent of all lessons. */
 let shopFilter='all';
+const resetTestStars=$('resetTestStars');
+if(testMode&&resetTestStars){
+ resetTestStars.hidden=false;
+ resetTestStars.onclick=()=>{
+  if(!confirm('確定將測試版的星星歸零？已收藏商品與學習紀錄會保留。'))return;
+  state.stars=0;
+  save();
+  $('stars').textContent='⭐ 0 星星';
+  renderShop();
+  $('shopMessage').textContent='星星已歸零。';
+ };
+}
+
 function owned(id){return state.purchased.includes(id);}
 function equipped(item){return state.equipped?.[item.slot]===item.id;}
 function syncOutfits(){
  const hat=owned(state.equipped?.hat)?state.equipped.hat:null;
  const cape=owned(state.equipped?.cape)?state.equipped.cape:null;
  const glasses=owned(state.equipped?.glasses)?state.equipped.glasses:null;
- const scene=owned(state.equipped?.home)?state.equipped.home:null;
+ const scene=selectedReward('scene');
+ const badge=selectedReward('badge');
  const img=$('heroMascot');
  window.GAME_APPROVED_ART.apply(img,window.GAME_APPROVED_ART.mainOutfit({hat,cape,glasses}));
  img.alt='精緻造型的豚鼠探險家';
- const labels=[];
- for(const id of [hat,cape,glasses,scene]){
-  const item=window.GAME_REWARDS.find(r=>r.id===id);
-  if(item)labels.push(item.name);
- }
+ const labels=[hat,cape,glasses].map(id=>window.GAME_REWARDS.find(item=>item.id===id)?.name).filter(Boolean);
  $('heroOutfitCaption').textContent=labels.length?labels.join(' · '):'我的冒險夥伴';
+ renderRewardIcon($('heroScene'),scene);
+ renderRewardIcon($('heroBadge'),badge);
  const hero=document.querySelector('.hero');
- hero.classList.toggle('hero-treehouse',scene==='treehouse');
- hero.classList.toggle('hero-castle',scene==='castle');
- hero.classList.toggle('hero-star-library',scene==='star-library');
- hero.classList.toggle('hero-ocean-treasure',scene==='ocean-treasure');
  hero.style.backgroundImage=scene
-  ?'linear-gradient(90deg,rgba(248,254,240,.82),rgba(255,255,255,.24)),url("'+window.GAME_REWARD_ART.scene(scene)+'")'
-  :'';
+  ? `linear-gradient(90deg,#f8fef0ee,#ffffff33),url("${window.GAME_APPROVED_ART.item(scene.id)}")`
+  : '';
  hero.style.backgroundSize=scene?'cover':'';
  hero.style.backgroundPosition=scene?'center':'';
 }
+function selectedReward(category){
+ return window.GAME_REWARDS.find(item=>item.category===category&&equipped(item)&&owned(item.id));
+}
+function renderRewardIcon(img,item){
+ img.hidden=!item;
+ if(!item)return;
+ window.GAME_APPROVED_ART.apply(img,item.id);
+ img.alt=item.name;
+ img.title=item.name;
+}
+function equipReward(item){
+ if(item.category==='outfit'){
+  // Each outfit image depicts the complete character.
+  for(const slot of ['hat','cape','glasses'])state.equipped[slot]=null;
+ }
+ state.equipped[item.slot]=item.id;
+}
 function renderShop(){
- const items=window.GAME_REWARDS,art=window.GAME_REWARD_ART;
+ const items=window.GAME_REWARDS;
  $('shopBalance').textContent='⭐ 可用星星：'+state.stars+' 顆';
  for(const b of $('shopFilters').querySelectorAll('button')){
   const active=b.dataset.filter===shopFilter;
@@ -86,26 +122,24 @@ function renderShop(){
   b.setAttribute('aria-pressed',String(active));
   b.onclick=()=>{shopFilter=b.dataset.filter;renderShop();};
  }
- const preview=$('rewardPreview');preview.replaceChildren();
- const img=document.createElement('img');
- window.GAME_APPROVED_ART.apply(img,window.GAME_APPROVED_ART.mainOutfit(state.equipped));
- img.className='shop-portrait';img.alt='已核准的豚鼠精緻角色造型';preview.append(img);
- const hint=document.createElement('p');hint.className='shop-portrait-label';
- hint.textContent='我的冒險夥伴 · 自由換裝';
- preview.append(hint);
- const scene=state.equipped?.home&&owned(state.equipped.home)?state.equipped.home:null;
- preview.style.backgroundImage=scene?'linear-gradient(#ffffff55,#ffffff55),url("'+art.scene(scene)+'")':'';
- preview.style.backgroundSize=scene?'cover':'';
+ const outfit={};
+ for(const slot of ['hat','cape','glasses']){
+  if(owned(state.equipped?.[slot]))outfit[slot]=state.equipped[slot];
+ }
+ window.GAME_APPROVED_ART.apply($('shopPortrait'),window.GAME_APPROVED_ART.mainOutfit(outfit));
+ renderRewardIcon($('shopScene'),selectedReward('scene'));
+ renderRewardIcon($('shopBadge'),selectedReward('badge'));
  const summary=$('equipSummary');summary.replaceChildren();
  const ownedCount=document.createElement('p');ownedCount.textContent='已收藏 '+state.purchased.length+' / '+items.length+' 件商品';summary.append(ownedCount);
- const using=items.filter(x=>x.category!=='badge'&&equipped(x)&&owned(x));
+ const using=items.filter(x=>equipped(x)&&owned(x));
  const equippedText=document.createElement('p');equippedText.textContent='使用中：'+(using.length?using.map(x=>x.name).join('、'):'預設造型');
  summary.append(equippedText);
  const shelf=$('collectionShelf');shelf.replaceChildren();
  for(const badge of items.filter(x=>x.category==='badge')){
   const box=document.createElement('div');box.className='badge-mini'+(owned(badge.id)?' badge-owned':'');
+  box.classList.toggle('badge-equipped',owned(badge.id)&&equipped(badge));
   const picture=document.createElement('img');window.GAME_APPROVED_ART.apply(picture,badge.id);picture.alt=badge.name;
-  const label=document.createElement('small');label.textContent=owned(badge.id)?badge.name:'尚未收藏';
+  const label=document.createElement('small');label.textContent=owned(badge.id)?badge.name+(equipped(badge)?' · 使用中':''):'尚未收藏';
   box.append(picture,label);shelf.append(box);
  }
  const area=$('shopItems');area.replaceChildren();
@@ -123,31 +157,28 @@ function renderShop(){
   const price=document.createElement('div');price.className='shop-price';price.textContent='⭐ '+item.price;
   const button=document.createElement('button');button.type='button';button.className='shop-buy';
   const isOwned=owned(item.id),active=isOwned&&equipped(item);
-  button.textContent=!isOwned?'⭐ '+item.price+' · 兌換':item.category==='badge'?'✓ 已收藏':active?'✓ 使用中 · 點擊卸下':'使用商品';
-  button.disabled=(!isOwned&&state.stars<item.price)||(isOwned&&item.category==='badge');
-  button.title=!isOwned&&state.stars<item.price?'還需要 '+(item.price-state.stars)+' 顆星星':'';
+  const shortfall=Math.max(0,item.price-state.stars);
+  button.textContent=isOwned
+   ?active?'✓ 使用中 · 點擊卸下':'使用商品'
+   :shortfall?'還差 '+shortfall+' 顆星星':'⭐ '+item.price+' · 兌換';
+  button.disabled=!isOwned&&shortfall>0;
   button.onclick=()=>{
    if(!owned(item.id)){
-    if(!window.GAME_REWARD_RULES.canBuy(state.stars,state.purchased,item.id))return;
-    if(!confirm('確定使用 '+item.price+' 顆星星兌換「'+item.name+'」嗎？'))return;
-    const result=window.GAME_REWARD_RULES.buy(state.stars,state.purchased,item.id);
-    if(!result)return;
-    state.stars=result.stars;state.purchased=result.owned;
-    if(item.category!=='badge')state.equipped[item.slot]=item.id;
-    $('shopMessage').textContent='🎉 成功收藏「'+item.name+'」！';
-   }else if(item.category!=='badge'){
-    state.equipped[item.slot]=active?null:item.id;
-    $('shopMessage').textContent=active?'已卸下「'+item.name+'」。':'已穿戴／啟用「'+item.name+'」。';
+    showRewardDetail(item);
+    return;
    }
-   save();syncOutfits();$('stars').textContent='⭐ '+state.stars+' 星星';renderShop();
+   const removing=equipped(item);
+   if(removing)state.equipped[item.slot]=null;
+   else equipReward(item);
+   updateShop(removing?'已卸下「'+item.name+'」。':'已穿戴／啟用「'+item.name+'」。');
   };
   card.append(artwrap,name,desc,price,button);area.append(card);
  }
- renderRewardShowcase(items,art);
+ renderRewardShowcase(items);
 }
-function renderRewardShowcase(items,art){
+function renderRewardShowcase(items){
  const equip=$('showcaseEquipment'),badges=$('showcaseBadges');equip.replaceChildren();badges.replaceChildren();
- const equippedItems=items.filter(x=>x.category!=='badge'&&owned(x.id)&&equipped(x));
+ const equippedItems=items.filter(x=>owned(x.id)&&equipped(x));
  const badgeItems=items.filter(x=>x.category==='badge'&&owned(x.id));
  for(const [target,list,placeholder] of [[equip,equippedItems,'目前沒有裝備，快來挑選喜歡的配件！'],[badges,badgeItems,'收集漂亮的徽章，記錄每一步學習成果！']]){
   if(!list.length){const p=document.createElement('p');p.className='showcase-placeholder';p.textContent=placeholder;target.append(p);}
@@ -160,10 +191,33 @@ function showRewardDetail(item){
  $('detailTitle').textContent=item.name;$('detailDescription').textContent=item.description;
  $('detailPrice').textContent=owned(item.id)?'✓ 已收藏':'⭐ '+item.price+' 顆星星';
  $('detailRarity').textContent=item.rarity;
- const b=$('detailBuy');b.textContent=owned(item.id)?'關閉介紹':'前往兌換';
- b.onclick=()=>{closeRewardDetail();if(!owned(item.id)){shopFilter=item.category;renderShop();const target=$('shopItems');if(target&&target.scrollIntoView)target.scrollIntoView({behavior:'smooth',block:'start'});}};
+ const b=$('detailBuy');
+ const alreadyOwned=owned(item.id);
+ const shortfall=Math.max(0,item.price-state.stars);
+ b.disabled=!alreadyOwned&&shortfall>0;
+ b.textContent=alreadyOwned?'關閉介紹':shortfall
+  ?'還差 '+shortfall+' 顆星星'
+  :'確認兌換 · '+item.price+' 顆星星';
+ b.onclick=()=>{
+  if(!owned(item.id)){
+   const result=window.GAME_REWARD_RULES.buy(state.stars,state.purchased,item.id);
+   if(!result)return;
+   state.stars=result.stars;
+   state.purchased=result.owned;
+   equipReward(item);
+   updateShop('🎉 已兌換並裝備「'+item.name+'」！');
+  }
+  closeRewardDetail();
+ };
  $('detailClose').onclick=closeRewardDetail;
  const backdrop=dialog.querySelector?.('.reward-detail-backdrop');if(backdrop)backdrop.onclick=closeRewardDetail;
+}
+function updateShop(message){
+ save();
+ syncOutfits();
+ $('stars').textContent='⭐ '+state.stars+' 星星';
+ renderShop();
+ $('shopMessage').textContent=message;
 }
 function closeRewardDetail(){$('rewardDetail').classList.add('hide');}
 

@@ -38,8 +38,7 @@ for(const id of ['magic-hat','hero-cape','treehouse','castle'])assert(items.some
 const game=fs.readFileSync('game.js','utf8'),html=fs.readFileSync('index.html','utf8');
 assert(html.includes('id="navShop"')&&html.includes('id="shopItems"')&&html.includes('id="collectionShelf"')&&html.includes('id="shopFilters"'));
 assert(html.includes('<script src="reward-art.js"></script><script src="approved-art.js"></script><script src="rewards.js"></script><script src="game.js"></script>'));
-assert(fs.existsSync('assets/v9-approved-art-atlas.svg'));
-assert(fs.readFileSync('assets/v9-approved-art-atlas.svg','utf8').includes('data:image/webp;base64,'));
+for(const item of items)assert(fs.existsSync('assets/'+item.id+'.webp'));
 assert(game.includes("state.correctIds.includes(q.id)"));
 assert(game.includes("GAME_REWARD_RULES.pointsForAnswer"));
 assert(game.includes("function renderShop()"));

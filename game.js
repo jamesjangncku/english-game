@@ -117,6 +117,7 @@ function renderShop(){
   const artwrap=document.createElement('div');artwrap.className='shop-art';
   const picture=document.createElement('img');picture.src=art.item(item.id);picture.alt=item.name+'商品插畫';picture.loading='lazy';
   artwrap.append(picture);
+  const peek=document.createElement('button');peek.type='button';peek.className='shop-peek';peek.textContent='⌕';peek.setAttribute('aria-label','查看「'+item.name+'」商品大圖');peek.onclick=()=>showRewardDetail(item);artwrap.append(peek);
   const rarity=document.createElement('span');rarity.className='rarity '+(item.rarity==='傳說'?'legendary':item.rarity==='稀有'?'rare':'common');
   rarity.textContent=item.rarity;artwrap.append(rarity);
   const name=document.createElement('h3');name.textContent=item.name;
@@ -144,4 +145,27 @@ function renderShop(){
   };
   card.append(artwrap,name,desc,price,button);area.append(card);
  }
+ renderRewardShowcase(items,art);
 }
+function renderRewardShowcase(items,art){
+ const equip=$('showcaseEquipment'),badges=$('showcaseBadges');equip.replaceChildren();badges.replaceChildren();
+ const equippedItems=items.filter(x=>x.category!=='badge'&&owned(x.id)&&equipped(x));
+ const badgeItems=items.filter(x=>x.category==='badge'&&owned(x.id));
+ for(const [target,list,placeholder] of [[equip,equippedItems,'目前沒有裝備，快來挑選喜歡的配件！'],[badges,badgeItems,'收集漂亮的徽章，記錄每一步學習成果！']]){
+  if(!list.length){const p=document.createElement('p');p.className='showcase-placeholder';p.textContent=placeholder;target.append(p);}
+  for(const item of list){const c=document.createElement('button');c.type='button';c.className='showcase-item';const img=document.createElement('img');img.src=art.item(item.id);img.alt=item.name;const title=document.createElement('span');title.textContent=item.name;c.append(img,title);c.onclick=()=>showRewardDetail(item);target.append(c);}
+ }
+}
+function showRewardDetail(item){
+ const dialog=$('rewardDetail');dialog.classList.remove('hide');
+ $('detailArt').src=window.GAME_REWARD_ART.item(item.id);$('detailArt').alt=item.name+'大圖';
+ $('detailTitle').textContent=item.name;$('detailDescription').textContent=item.description;
+ $('detailPrice').textContent=owned(item.id)?'✓ 已收藏':'⭐ '+item.price+' 顆星星';
+ $('detailRarity').textContent=item.rarity;
+ const b=$('detailBuy');b.textContent=owned(item.id)?'關閉介紹':'前往兌換';
+ b.onclick=()=>{closeRewardDetail();if(!owned(item.id)){shopFilter=item.category;renderShop();const target=$('shopItems');if(target&&target.scrollIntoView)target.scrollIntoView({behavior:'smooth',block:'start'});}};
+ $('detailClose').onclick=closeRewardDetail;
+ const backdrop=dialog.querySelector?.('.reward-detail-backdrop');if(backdrop)backdrop.onclick=closeRewardDetail;
+}
+function closeRewardDetail(){$('rewardDetail').classList.add('hide');}
+
